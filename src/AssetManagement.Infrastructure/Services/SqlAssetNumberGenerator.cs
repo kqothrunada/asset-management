@@ -1,4 +1,4 @@
-﻿using AssetManagement.Application.Abstraction;
+﻿using AssetManagement.Application.Abstractions;
 using AssetManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

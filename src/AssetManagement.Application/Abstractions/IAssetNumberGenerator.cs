@@ -1,4 +1,4 @@
-﻿namespace AssetManagement.Application.Abstraction
+﻿namespace AssetManagement.Application.Abstractions
 {
     public interface IAssetNumberGenerator
     {
