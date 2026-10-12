@@ -1,8 +1,10 @@
+using AssetManagement.Api.Security;
 using AssetManagement.Application.Abstractions;
 using AssetManagement.Domain;
 using AssetManagement.Infrastructure.Data;
 using AssetManagement.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +53,14 @@ builder.Services
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddScoped<IAuthorizationHandler, MenuPermissionHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler, HQManagerHandler>();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, MenuPolicyProvider>();
+
+builder.Services.AddAuthorization(o =>
+    o.AddPolicy("assets:export", p => p
+        .RequireAuthenticatedUser()
+        .AddRequirements(new HQManagerRequirement())));
 
 builder.Services.AddScoped<IAssetNumberGenerator, SqlAssetNumberGenerator>();
 
