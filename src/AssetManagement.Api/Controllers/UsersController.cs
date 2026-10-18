@@ -63,11 +63,11 @@ namespace AssetManagement.Api.Controllers
         public async Task<IActionResult> Create(CreateUserDto dto, CancellationToken ct)
         {
             if (!await _context.Divisions.AnyAsync(d => d.Id == dto.DivisionId, ct))
-                return BadRequest(new { message = "Division tidak ditemukan." });
+                return BadRequest(new { message = "Division is not found." });
 
             var badRole = await FindUnknownRoleAsync(dto.Roles);
             if (badRole is not null)
-                return BadRequest(new { message = $"Role '{badRole}' tidak ditemukan." });
+                return BadRequest(new { message = $"Role '{badRole}' is not found." });
 
             var user = new AppUser
             {
@@ -104,15 +104,15 @@ namespace AssetManagement.Api.Controllers
             if (user is null) return NotFound();
 
             if (!await _context.Divisions.AnyAsync(d => d.Id == dto.DivisionId, ct))
-                return BadRequest(new { message = "Division tidak ditemukan." });
+                return BadRequest(new { message = "Division is not found." });
 
             var badRole = await FindUnknownRoleAsync(dto.Roles);
             if (badRole is not null)
-                return BadRequest(new { message = $"Role '{badRole}' tidak ditemukan." });
+                return BadRequest(new { message = $"Role '{badRole}' is not found." });
 
             if (id == CurrentUserId && !dto.Roles.Contains("Admin")
                 && await _userManager.IsInRoleAsync(user, "Admin"))
-                return BadRequest(new { message = "Anda tidak dapat mencabut role Admin dari akun sendiri." });
+                return BadRequest(new { message = "You cannot remove the Admin role from your own account." });
 
             user.FullName = dto.FullName;
             user.Email = dto.Email;
@@ -153,16 +153,15 @@ namespace AssetManagement.Api.Controllers
         public async Task<IActionResult> Delete(string id, CancellationToken ct)
         {
             if (id == CurrentUserId)
-                return BadRequest(new { message = "Anda tidak dapat menghapus akun sendiri." });
+                return BadRequest(new { message = "You cannot remove your own account." });
 
             var user = await _userManager.FindByIdAsync(id);
             if (user is null) return NotFound();
 
-            // User yang masih menjadi approver pending tidak boleh dihapus, workflow akan macet
-            var hasPending = await _context.ApprovalRequests
-                .AnyAsync(a => a.ApproverId == id && a.Status == ApprovalStatus.Pending, ct);
+            var hasPending = await _context.ApprovalRequests.AnyAsync(a => 
+                a.ApproverId == id && a.Status == ApprovalStatus.Pending && a.Asset.Status == AssetStatus.UnderReview, ct);
             if (hasPending)
-                return Conflict(new { message = "User masih memiliki approval yang belum diputuskan." });
+                return Conflict(new { message = "User still has approval that has not been decided." });
 
             var result = await _userManager.DeleteAsync(user);
             return result.Succeeded ? NoContent() : IdentityError(result);

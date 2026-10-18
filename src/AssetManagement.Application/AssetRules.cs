@@ -26,5 +26,11 @@ namespace AssetManagement.Application
             var text = Regex.Replace(html, "<[^>]*>", "").Replace("&nbsp;", " ");
             return !string.IsNullOrWhiteSpace(text);
         }
+
+        public static bool IsManualTransitionAllowed(AssetStatus from, AssetStatus to) =>
+            from == to
+            || (from, to) is (AssetStatus.New, AssetStatus.UnderReview)
+                          or (AssetStatus.Returned, AssetStatus.UnderReview)
+                          or (AssetStatus.Assigned, AssetStatus.Returned);
     }
 }

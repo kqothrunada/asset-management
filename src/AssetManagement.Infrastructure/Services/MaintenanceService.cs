@@ -32,7 +32,7 @@ namespace AssetManagement.Infrastructure.Services
             await _assets.FindVisibleAsync(assetId, u, ct);
             var rows = await _context.AssetMaintenances.AsNoTracking().Where(m => m.AssetId == assetId)
                 .OrderByDescending(m => m.Date).ThenByDescending(m => m.Id).ToListAsync(ct);
-            return rows.Select(ToDto).ToList();
+            return rows.Select(pToDto).ToList();
         }
         #endregion
 
@@ -40,42 +40,42 @@ namespace AssetManagement.Infrastructure.Services
         public async Task<MaintenanceResult> AddAsync(int assetId, MaintenanceUpsertDto dto, ClaimsPrincipal u, CancellationToken ct)
         {
             await _validator.ValidateAndThrowAsync(dto, ct);
-            var asset = await LoadForWriteAsync(assetId, u, ct);
+            var asset = await pLoadForWriteAsync(assetId, u, ct);
 
             await using var tx = await _context.Database.BeginTransactionAsync(ct);
             await _context.LockAssetRowAsync(assetId, ct);
 
             var m = new AssetMaintenance { AssetId = assetId };
-            Apply(m, dto);
+            pApply(m, dto);
             _context.AssetMaintenances.Add(m);
             await _context.SaveChangesAsync(ct);
-            await RecalculateAsync(asset, ct);
+            await pRecalculateAsync(asset, ct);
             await tx.CommitAsync(ct);
 
             _log.LogInformation("Maintenance {Id} is added to {Code}, total {Total}", m.Id, asset.AssetCode, asset.AssetValueTotal);
-            return new MaintenanceResult(ToDto(m), asset.AssetValueTotal);
+            return new MaintenanceResult(pToDto(m), asset.AssetValueTotal);
         }
 
         public async Task<MaintenanceResult> UpdateAsync(int assetId, int id, MaintenanceUpsertDto dto, ClaimsPrincipal u, CancellationToken ct)
         {
             await _validator.ValidateAndThrowAsync(dto, ct);
-            var asset = await LoadForWriteAsync(assetId, u, ct);
+            var asset = await pLoadForWriteAsync(assetId, u, ct);
 
             await using var tx = await _context.Database.BeginTransactionAsync(ct);
             await _context.LockAssetRowAsync(assetId, ct);
 
             var m = await _context.AssetMaintenances.FirstOrDefaultAsync(x => x.Id == id && x.AssetId == assetId, ct)
                     ?? throw new NotFoundException("Maintenance not found.");
-            Apply(m, dto);
+            pApply(m, dto);
             await _context.SaveChangesAsync(ct);
-            await RecalculateAsync(asset, ct);
+            await pRecalculateAsync(asset, ct);
             await tx.CommitAsync(ct);
-            return new MaintenanceResult(ToDto(m), asset.AssetValueTotal);
+            return new MaintenanceResult(pToDto(m), asset.AssetValueTotal);
         }
 
         public async Task<MaintenanceResult> DeleteAsync(int assetId, int id, ClaimsPrincipal u, CancellationToken ct)
         {
-            var asset = await LoadForWriteAsync(assetId, u, ct);
+            var asset = await pLoadForWriteAsync(assetId, u, ct);
 
             await using var tx = await _context.Database.BeginTransactionAsync(ct);
             await _context.LockAssetRowAsync(assetId, ct);
@@ -84,14 +84,14 @@ namespace AssetManagement.Infrastructure.Services
                     ?? throw new NotFoundException("Maintenance not found.");
             _context.AssetMaintenances.Remove(m);
             await _context.SaveChangesAsync(ct);
-            await RecalculateAsync(asset, ct);
+            await pRecalculateAsync(asset, ct);
             await tx.CommitAsync(ct);
             return new MaintenanceResult(null, asset.AssetValueTotal);
         }
         #endregion
 
         #region Private
-        private async Task<Asset> LoadForWriteAsync(int assetId, ClaimsPrincipal u, CancellationToken ct)
+        private async Task<Asset> pLoadForWriteAsync(int assetId, ClaimsPrincipal u, CancellationToken ct)
         {
             var asset = await _assets.FindVisibleAsync(assetId, u, ct);
             if (!_assets.CanModify(asset, u)) throw new ForbiddenException("You only have read access for this asset.");
@@ -100,21 +100,21 @@ namespace AssetManagement.Infrastructure.Services
             return asset;
         }
 
-        private async Task RecalculateAsync(Asset asset, CancellationToken ct)
+        private async Task pRecalculateAsync(Asset asset, CancellationToken ct)
         {
             var costs = await _context.AssetMaintenances.Where(x => x.AssetId == asset.Id).Select(x => x.Cost).ToListAsync(ct);
             asset.AssetValueTotal = costs.Sum();
             await _context.SaveChangesAsync(ct);
         }
 
-        private static void Apply(AssetMaintenance m, MaintenanceUpsertDto d)
+        private static void pApply(AssetMaintenance m, MaintenanceUpsertDto d)
         {
             m.Cost = d.Cost; m.Type = d.Type; m.Date = d.Date;
             m.Vendor = string.IsNullOrWhiteSpace(d.Vendor) ? null : d.Vendor.Trim();
             m.Comments = string.IsNullOrWhiteSpace(d.Comments) ? null : d.Comments.Trim();
         }
 
-        private static MaintenanceDto ToDto(AssetMaintenance m) => new(m.Id, m.AssetId, m.Cost, m.Type, m.Comments, m.Vendor, m.Date);
+        private static MaintenanceDto pToDto(AssetMaintenance m) => new(m.Id, m.AssetId, m.Cost, m.Type, m.Comments, m.Vendor, m.Date);
         #endregion
     }
 }

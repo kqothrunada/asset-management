@@ -8,6 +8,7 @@ using ClosedXML.Excel;
 using FluentValidation;
 using Ganss.Xss;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
 namespace AssetManagement.Infrastructure.Services
@@ -18,12 +19,17 @@ namespace AssetManagement.Infrastructure.Services
         private readonly IAssetNumberGenerator _num;
         private readonly IValidator<AssetUpsertDto> _validator;
         private readonly HtmlSanitizer _sanitizer = new();
+        private readonly ApprovalService _approvals;
+        private readonly ILogger<AssetService> _log;
 
-        public AssetService(AppDbContext context, IAssetNumberGenerator num, IValidator<AssetUpsertDto> validator)
+        public AssetService(AppDbContext context, IAssetNumberGenerator num, IValidator<AssetUpsertDto> validator,
+            ApprovalService approval, ILogger<AssetService> log)
         {
             _context = context; 
             _num = num; 
             _validator = validator;
+            _approvals = approval;
+            _log = log;
         }
 
         public IQueryable<Asset> Visible(ClaimsPrincipal u)
@@ -101,6 +107,7 @@ namespace AssetManagement.Infrastructure.Services
             _context.Assets.Add(asset);
             await _context.SaveChangesAsync(ct);
 
+            _log.LogInformation("Asset {Code} made by {User}", asset.AssetCode, uid);
             return await pToDetailAsync(asset, u, ct);
         }
 
@@ -119,7 +126,7 @@ namespace AssetManagement.Infrastructure.Services
                 && await _context.AssetMaintenances.AnyAsync(m => m.AssetId == id, ct))
                 throw new BusinessRuleException("The asset still has maintenance records. Delete those records before changing the subcategory to furniture.");
 
-            if (dto.Status != AssetStatus.Assigned
+            if (a.Status != AssetStatus.Assigned
                 && !string.IsNullOrWhiteSpace(dto.RequesterId)
                 && dto.RequesterId != a.RequesterId)
             {
@@ -136,7 +143,15 @@ namespace AssetManagement.Infrastructure.Services
             a.Description = dto.Description;
             a.Category = dto.Category;
             a.Subcategory = dto.Subcategory;
-            a.Status = dto.Status;
+            if (dto.Status != a.Status)
+            {
+                if (!AssetRules.IsManualTransitionAllowed(a.Status, dto.Status))
+                    throw new BusinessRuleException($"Status cannot be changed directly from {a.Status} to {dto.Status}.");
+                if (dto.Status == AssetStatus.UnderReview)
+                    await _approvals.StartReviewAsync(a, ct);
+                _log.LogInformation("Asset {Code} status {Old}→{New}", a.AssetCode, a.Status, dto.Status);
+                a.Status = dto.Status;
+            }
 
             await _context.SaveChangesAsync(ct);
             return await pToDetailAsync(a, u, ct);
