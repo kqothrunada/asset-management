@@ -25,7 +25,7 @@ namespace AssetManagement.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder b)
         {
-            base.OnModelCreating(b);   // wajib: membuat tabel Identity
+            base.OnModelCreating(b);   
 
             if (Database.IsSqlServer())
                 b.HasSequence<int>("AssetNumberSeq").StartsAt(1).IncrementsBy(1);
@@ -49,7 +49,6 @@ namespace AssetManagement.Infrastructure.Data
                 e.Property(a => a.Subcategory).HasConversion<string>().HasMaxLength(30);
                 e.Property(a => a.Status).HasConversion<string>().HasMaxLength(30);
 
-                // Poin 15: kolom terenkripsi
                 e.Property(a => a.AssetValueTotal)
                  .HasColumnType("nvarchar(max)")
                  .HasConversion(new EncryptedDecimalConverter(_protector));

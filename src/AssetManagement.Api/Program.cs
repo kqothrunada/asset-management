@@ -1,8 +1,11 @@
+using AssetManagement.Api.Infrastructure;
 using AssetManagement.Api.Security;
 using AssetManagement.Application.Abstractions;
+using AssetManagement.Application.Validators;
 using AssetManagement.Domain;
 using AssetManagement.Infrastructure.Data;
 using AssetManagement.Infrastructure.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
@@ -12,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,7 +68,14 @@ builder.Services.AddAuthorization(o =>
 
 builder.Services.AddScoped<IAssetNumberGenerator, SqlAssetNumberGenerator>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+builder.Services.AddValidatorsFromAssemblyContaining<AssetUpsertValidator>();
+builder.Services.AddScoped<AssetService>();
+
+builder.Services.AddExceptionHandler<ApiExceptionHandler>();
+builder.Services.AddProblemDetails();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(o =>
@@ -88,6 +99,7 @@ builder.Services.AddSwaggerGen(o =>
 });
 
 var app = builder.Build();
+app.UseExceptionHandler();
 
 using (var scope = app.Services.CreateScope())
 {

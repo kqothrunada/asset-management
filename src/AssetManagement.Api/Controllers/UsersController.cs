@@ -87,7 +87,7 @@ namespace AssetManagement.Api.Controllers
                 var roleResult = await _userManager.AddToRolesAsync(user, dto.Roles);
                 if (!roleResult.Succeeded)
                 {
-                    await _userManager.DeleteAsync(user);   // rollback manual agar tidak ada user setengah jadi
+                    await _userManager.DeleteAsync(user);
                     return IdentityError(roleResult);
                 }
             }
@@ -110,7 +110,6 @@ namespace AssetManagement.Api.Controllers
             if (badRole is not null)
                 return BadRequest(new { message = $"Role '{badRole}' tidak ditemukan." });
 
-            // Jangan sampai admin mencabut role Admin dari dirinya sendiri (terkunci dari User Management)
             if (id == CurrentUserId && !dto.Roles.Contains("Admin")
                 && await _userManager.IsInRoleAsync(user, "Admin"))
                 return BadRequest(new { message = "Anda tidak dapat mencabut role Admin dari akun sendiri." });
@@ -123,7 +122,6 @@ namespace AssetManagement.Api.Controllers
             var update = await _userManager.UpdateAsync(user);
             if (!update.Succeeded) return IdentityError(update);
 
-            // sinkronkan role: hapus yang tidak dipilih, tambah yang baru
             var current = await _userManager.GetRolesAsync(user);
             var toRemove = current.Except(dto.Roles).ToList();
             var toAdd = dto.Roles.Except(current).ToList();
