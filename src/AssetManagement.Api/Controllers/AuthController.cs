@@ -62,6 +62,7 @@ namespace AssetManagement.Api.Controllers
 
             return Ok(new
             {
+                id = user.Id,
                 token = new JwtSecurityTokenHandler().WriteToken(token),
                 name = user.FullName,
                 division = user.Division.Name,

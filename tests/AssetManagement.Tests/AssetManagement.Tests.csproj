@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
     <PackageReference Include="FluentAssertions" Version="8.11.0" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.11" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
@@ -24,6 +25,7 @@
     <ProjectReference Include="..\..\src\AssetManagement.Application\AssetManagement.Application.csproj" />
     <ProjectReference Include="..\..\src\AssetManagement.Infrastructure\AssetManagement.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\AssetManagement.Domain\AssetManagement.Domain.csproj" />
+    <ProjectReference Include="..\..\src\AssetManagement.Api\AssetManagement.Api.csproj" />
   </ItemGroup>
 
 </Project>

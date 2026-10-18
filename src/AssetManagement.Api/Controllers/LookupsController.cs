@@ -32,5 +32,9 @@ namespace AssetManagement.Api.Controllers
                 hasMaintenance = AssetRules.HasMaintenance(s)
             })
         }));
+
+        [HttpGet("divisions")]
+        public async Task<IActionResult> Divisions(CancellationToken ct) =>
+            Ok(await _context.Divisions.AsNoTracking().OrderBy(d => d.Name).Select(d => new { d.Id, d.Name }).ToListAsync(ct));
     }
 }
