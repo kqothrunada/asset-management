@@ -1,0 +1,824 @@
+{
+  "info": {
+    "name": "Asset Management API",
+    "description": "Jalankan '1. Auth' dulu untuk menyimpan token. Ganti variabel baseUrl: Docker = http://localhost:5000, dotnet run = port di launchSettings.json.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "assetId",
+      "value": "1"
+    },
+    {
+      "key": "maintId",
+      "value": "1"
+    },
+    {
+      "key": "approvalHeadId",
+      "value": "1"
+    },
+    {
+      "key": "approvalMgrId",
+      "value": "2"
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "roleId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Auth (jalankan login dulu; token tersimpan otomatis)",
+      "item": [
+        {
+          "name": "Login - sarah",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userName\": \"sarah\",\n  \"password\": \"Pass1234!\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('login 200', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - leo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userName\": \"leo\",\n  \"password\": \"Pass1234!\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('login 200', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - jane",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userName\": \"jane\",\n  \"password\": \"Pass1234!\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('login 200', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - mike",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userName\": \"mike\",\n  \"password\": \"Pass1234!\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('login 200', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - emma",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userName\": \"emma\",\n  \"password\": \"Pass1234!\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('login 200', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - bob",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userName\": \"bob\",\n  \"password\": \"Pass1234!\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('login 200', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Me - claims",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/me"
+          }
+        },
+        {
+          "name": "Me - sidebar menu (dynamic)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/me/menu"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. REST - Assets (login leo atau jane)",
+      "item": [
+        {
+          "name": "Lookups - categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/lookups/categories"
+          }
+        },
+        {
+          "name": "Lookups - users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/lookups/users"
+          }
+        },
+        {
+          "name": "Create asset (AST-xxx)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/assets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laptop Dell\",\n  \"description\": \"<p>Laptop untuk developer</p>\",\n  \"category\": \"ITEquipment\",\n  \"subcategory\": \"Laptop\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201', () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json(); pm.collectionVariables.set('assetId', j.id); pm.test('assetCode AST-', () => pm.expect(j.assetCode).to.match(/^AST-\\d{3,}$/));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create asset - invalid (tanpa description -> 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/assets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"X\", \"category\": \"ITEquipment\", \"subcategory\": \"Laptop\"}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List assets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/assets?page=1&pageSize=10"
+          }
+        },
+        {
+          "name": "Get asset",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/assets/{{assetId}}"
+          }
+        },
+        {
+          "name": "Update asset",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/assets/{{assetId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laptop Dell\",\n  \"description\": \"<p>Laptop untuk developer</p>\",\n  \"category\": \"ITEquipment\",\n  \"subcategory\": \"Laptop\",\n  \"status\": \"New\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete asset (Manager)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/assets/{{assetId}}"
+          }
+        },
+        {
+          "name": "Export Excel (hanya HQ Manager = sarah)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/assets/export"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. REST - Maintenance",
+      "item": [
+        {
+          "name": "List maintenance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/assets/{{assetId}}/maintenances"
+          }
+        },
+        {
+          "name": "Add maintenance (total ter-update)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/assets/{{assetId}}/maintenances",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cost\": 250000.5,\n  \"type\": \"Preventive\",\n  \"vendor\": \"PT Servis\",\n  \"comments\": \"Ganti thermal paste\",\n  \"date\": \"2026-10-21\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201', () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json(); pm.collectionVariables.set('maintId', j.maintenance.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update maintenance",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/assets/{{assetId}}/maintenances/{{maintId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"cost\": 100000, \"type\": \"Corrective\", \"vendor\": \"PT Servis\", \"date\": \"2026-10-22\"}"
+            }
+          }
+        },
+        {
+          "name": "Delete maintenance",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/assets/{{assetId}}/maintenances/{{maintId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. REST - Approval workflow",
+      "item": [
+        {
+          "name": "Start review (jane/leo): status -> UnderReview",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/assets/{{assetId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laptop Dell\",\n  \"description\": \"<p>Laptop untuk developer</p>\",\n  \"category\": \"ITEquipment\",\n  \"subcategory\": \"Laptop\",\n  \"status\": \"UnderReview\"\n}"
+            }
+          }
+        },
+        {
+          "name": "List approvals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/assets/{{assetId}}/approvals"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const a = pm.response.json();",
+                  "const h = a.find(x => x.role === 'Department Head'), m = a.find(x => x.role === 'Asset Manager');",
+                  "if (h) pm.collectionVariables.set('approvalHeadId', h.id); if (m) pm.collectionVariables.set('approvalMgrId', m.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Approve - Department Head (login leo)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/approvals/{{approvalHeadId}}/approve",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"notes\": \"OK\"}"
+            }
+          }
+        },
+        {
+          "name": "Approve - Asset Manager (login sarah)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/approvals/{{approvalMgrId}}/approve",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"notes\": \"OK\"}"
+            }
+          }
+        },
+        {
+          "name": "Reject - Department Head (notes wajib)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/approvals/{{approvalHeadId}}/reject",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"notes\": \"Tidak sesuai kebutuhan\"}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. REST - User Management (login sarah)",
+      "item": [
+        {
+          "name": "List users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/users"
+          }
+        },
+        {
+          "name": "Create user",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userName\": \"tes1\",\n  \"fullName\": \"Tes Satu\",\n  \"password\": \"Pass1234!\",\n  \"divisionId\": 2,\n  \"isManager\": false,\n  \"roles\": [\n    \"User\"\n  ]\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.collectionVariables.set('userId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete user",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        },
+        {
+          "name": "List roles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/roles"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json().find(x => x.name === 'User'); if (r) pm.collectionVariables.set('roleId', r.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get role menu permissions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/roles/{{roleId}}/permissions"
+          }
+        },
+        {
+          "name": "Update role menu permissions",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/roles/{{roleId}}/permissions",
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"menuKey\": \"dashboard\",\n    \"canView\": true,\n    \"canAdd\": false,\n    \"canEdit\": false,\n    \"canDelete\": false\n  },\n  {\n    \"menuKey\": \"assets\",\n    \"canView\": true,\n    \"canAdd\": true,\n    \"canEdit\": true,\n    \"canDelete\": false\n  },\n  {\n    \"menuKey\": \"users\",\n    \"canView\": false,\n    \"canAdd\": false,\n    \"canEdit\": false,\n    \"canDelete\": false\n  }\n]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. JSON-RPC 2.0",
+      "item": [
+        {
+          "name": "asset.get",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/rpc/json",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"jsonrpc\": \"2.0\", \"method\": \"asset.get\", \"params\": {\"id\": {{assetId}}}, \"id\": 1}"
+            }
+          }
+        },
+        {
+          "name": "asset.list",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/rpc/json",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"jsonrpc\": \"2.0\", \"method\": \"asset.list\", \"id\": 2}"
+            }
+          }
+        },
+        {
+          "name": "method not found (-32601)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/rpc/json",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"jsonrpc\": \"2.0\", \"method\": \"foo\", \"id\": 3}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. XML-RPC",
+      "item": [
+        {
+          "name": "asset.get",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml"
+              }
+            ],
+            "url": "{{baseUrl}}/rpc/xml",
+            "body": {
+              "mode": "raw",
+              "raw": "<methodCall><methodName>asset.get</methodName><params><param><value><int>{{assetId}}</int></value></param></params></methodCall>"
+            }
+          }
+        },
+        {
+          "name": "asset.list",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml"
+              }
+            ],
+            "url": "{{baseUrl}}/rpc/xml",
+            "body": {
+              "mode": "raw",
+              "raw": "<methodCall><methodName>asset.list</methodName></methodCall>"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. SOAP (WSDL: {{baseUrl}}/soap/assets?wsdl)",
+      "item": [
+        {
+          "name": "GetAsset",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://tempuri.org/IAssetSoapService/GetAsset\""
+              }
+            ],
+            "url": "{{baseUrl}}/soap/assets",
+            "body": {
+              "mode": "raw",
+              "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><GetAsset xmlns=\"http://tempuri.org/\"><id>{{assetId}}</id></GetAsset></soap:Body></soap:Envelope>"
+            }
+          }
+        },
+        {
+          "name": "ListAssets",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://tempuri.org/IAssetSoapService/ListAssets\""
+              }
+            ],
+            "url": "{{baseUrl}}/soap/assets",
+            "body": {
+              "mode": "raw",
+              "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><ListAssets xmlns=\"http://tempuri.org/\"></ListAssets></soap:Body></soap:Envelope>"
+            }
+          }
+        },
+        {
+          "name": "WSDL",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/soap/assets?wsdl",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Consume semua protokol",
+      "item": [
+        {
+          "name": "Integration demo (REST + JSON-RPC + XML-RPC + SOAP)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/integration-demo/{{assetId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('semua protokol konsisten', () => pm.expect(pm.response.json().consistent).to.be.true);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
