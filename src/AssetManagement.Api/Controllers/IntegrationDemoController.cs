@@ -21,7 +21,10 @@ namespace AssetManagement.Api.Controllers
         public async Task<IActionResult> Run(int id, CancellationToken ct)
         {
             var token = Request.Headers.Authorization.ToString()["Bearer ".Length..];
-            var baseUrl = _cfg["Integration:BaseUrl"] ?? $"{Request.Scheme}://{Request.Host}";
+            var configured = _cfg["Integration:BaseUrl"];
+            var baseUrl = string.IsNullOrWhiteSpace(configured)
+                ? $"{Request.Scheme}://{Request.Host}"
+                : configured.TrimEnd('/');
             var ctx = new ClientContext(baseUrl, token);
 
             var results = await Task.WhenAll(_clients.Select(async c =>

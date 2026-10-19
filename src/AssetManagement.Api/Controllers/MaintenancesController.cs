@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AssetManagement.Api.Controllers
 {
     [ApiController]
-    [Route("api/assets/{assetId:int}/maintenance")]
+    [Route("api/assets/{assetId:int}/maintenances")]
     [Authorize]
     public class MaintenancesController : ControllerBase
     {

@@ -49,9 +49,11 @@ namespace AssetManagement.Infrastructure.Data
                 e.Property(a => a.Subcategory).HasConversion<string>().HasMaxLength(30);
                 e.Property(a => a.Status).HasConversion<string>().HasMaxLength(30);
 
-                e.Property(a => a.AssetValueTotal)
-                 .HasColumnType("nvarchar(max)")
-                 .HasConversion(new EncryptedDecimalConverter(_protector));
+                var valueProp = e.Property(a => a.AssetValueTotal)
+                     .HasConversion(new EncryptedDecimalConverter(_protector));
+
+                if (Database.IsSqlServer())
+                    valueProp.HasColumnType("nvarchar(max)");
             });
 
             b.Entity<AssetMaintenance>(e =>

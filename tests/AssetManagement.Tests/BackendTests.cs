@@ -3,10 +3,9 @@ using AssetManagement.Application.Dtos;
 using AssetManagement.Application.Exceptions;
 using AssetManagement.Domain;
 using FluentAssertions;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace AssetManagement.Tests
 {
